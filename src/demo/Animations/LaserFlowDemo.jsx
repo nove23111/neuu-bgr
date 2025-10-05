@@ -95,200 +95,33 @@ const LaserFlowDemo = () => {
   ];
 
   return (
-    <TabsLayout>
-      <PreviewTab>
-        <Box
-          ref={containerRef}
-          position="relative"
-          className="demo-container"
-          h={600}
-          p={0}
-          overflow="hidden"
-          onMouseMove={e => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const el = revealImgRef.current;
-            if (el) {
-              el.style.setProperty('--mx', `${x}px`);
-              el.style.setProperty('--my', `${y + rect.height * 0.5}px`);
-            }
-          }}
-          onMouseLeave={() => {
-            const el = revealImgRef.current;
-            if (el) {
-              el.style.setProperty('--mx', `-9999px`);
-              el.style.setProperty('--my', `-9999px`);
-            }
-          }}
-        >
-          <LaserFlow
-            horizontalBeamOffset={selectedExample === 'box' ? 0.1 : 0.0}
-            verticalBeamOffset={selectedExample === 'box' ? -0.2 : -0.5}
-            horizontalSizing={horizontalSizing}
-            verticalSizing={verticalSizing}
-            wispDensity={wispDensity}
-            wispSpeed={wispSpeed}
-            wispIntensity={wispIntensity}
-            flowSpeed={flowSpeed}
-            flowStrength={flowStrength}
-            fogIntensity={fogIntensity}
-            fogScale={fogScale}
-            fogFallSpeed={fogFallSpeed}
-            decay={decay}
-            falloffStart={falloffStart}
-            color={laserColor}
-            key={key}
-            className={`laser-flow-demo-${selectedExample}`}
-          />
-
-          {selectedExample === 'box' && (
-            <>
-              <Box
-                className="demo-container-dots"
-                zIndex={6}
-                position="absolute"
-                top="70%"
-                left="50%"
-                transform="translateX(-50%)"
-                width="86%"
-                height="60%"
-                backgroundColor="#060010"
-                borderRadius="20px"
-                border={`2px solid ${laserColor}`}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                color="white"
-                fontSize="2xl"
-              ></Box>
-              <Image
-                ref={revealImgRef}
-                src="https://cdn.dribbble.com/userupload/15325964/file/original-25ae735b5d9255a4a31d3471fd1c346a.png?resize=1024x768&vertical=center"
-                position="absolute"
-                width="100%"
-                top="-50%"
-                zIndex={2}
-                mixBlendMode="lighten"
-                opacity={0.3}
-                pointerEvents="none"
-                style={{
-                  ['--mx']: '-9999px',
-                  ['--my']: '-9999px',
-                  WebkitMaskImage:
-                    'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
-                  maskImage:
-                    'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
-                  WebkitMaskRepeat: 'no-repeat',
-                  maskRepeat: 'no-repeat'
-                }}
-              />
-            </>
-          )}
-
-          <RefreshButton onClick={forceRerender} />
-        </Box>
-
-        <Customize>
-          <PreviewSelect
-            title="Example:"
-            options={exampleOptions}
-            value={selectedExample}
-            onChange={setSelectedExample}
-            width={120}
-          />
-          <Flex alignItems="center" mt={4}>
-            <Text fontSize="sm" mr={2}>
-              Color
-            </Text>
-            <Input
-              type="color"
-              value={laserColor}
-              onChange={e => {
-                setLaserColor(e.target.value);
-              }}
-              width="50px"
-            />
-          </Flex>
-
-          <PreviewSlider
-            title="Horizontal Sizing"
-            min={0.1}
-            max={2}
-            step={0.01}
-            value={horizontalSizing}
-            onChange={setHorizontalSizing}
-          />
-          <PreviewSlider
-            title="Vertical Sizing"
-            min={0.1}
-            max={5}
-            step={0.1}
-            value={verticalSizing}
-            onChange={setVerticalSizing}
-          />
-          <PreviewSlider
-            title="Wisp Density"
-            min={0}
-            max={5}
-            step={0.1}
-            value={wispDensity}
-            onChange={setWispDensity}
-          />
-          <PreviewSlider title="Wisp Speed" min={1} max={50} step={0.5} value={wispSpeed} onChange={setWispSpeed} />
-          <PreviewSlider
-            title="Wisp Intensity"
-            min={0}
-            max={20}
-            step={0.1}
-            value={wispIntensity}
-            onChange={setWispIntensity}
-          />
-          <PreviewSlider title="Flow Speed" min={0} max={2} step={0.01} value={flowSpeed} onChange={setFlowSpeed} />
-          <PreviewSlider
-            title="Flow Strength"
-            min={0}
-            max={1}
-            step={0.01}
-            value={flowStrength}
-            onChange={setFlowStrength}
-          />
-          <PreviewSlider
-            title="Fog Intensity"
-            min={0}
-            max={1}
-            step={0.01}
-            value={fogIntensity}
-            onChange={setFogIntensity}
-          />
-          <PreviewSlider title="Fog Scale" min={0.1} max={1} step={0.01} value={fogScale} onChange={setFogScale} />
-          <PreviewSlider
-            title="Fog Fall Speed"
-            min={0}
-            max={2}
-            step={0.01}
-            value={fogFallSpeed}
-            onChange={setFogFallSpeed}
-          />
-          <PreviewSlider title="Decay" min={0.5} max={3} step={0.01} value={decay} onChange={setDecay} />
-          <PreviewSlider
-            title="Falloff Start"
-            min={0.5}
-            max={3}
-            step={0.01}
-            value={falloffStart}
-            onChange={setFalloffStart}
-          />
-        </Customize>
-
-        <PropTable data={propData} />
-        <Dependencies dependencyList={['three']} />
-      </PreviewTab>
-
-      <CodeTab>
-        <CodeExample codeObject={laserFlow} />
-      </CodeTab>
-    </TabsLayout>
+    <Box
+      position="relative"
+      w="100%"
+      h="100vh"
+      overflow="hidden"
+      bg="#0F0D13"
+    >
+      <LaserFlow
+        horizontalBeamOffset={selectedExample === "box" ? 0.1 : 0.0}
+        verticalBeamOffset={selectedExample === "box" ? -0.2 : -0.5}
+        horizontalSizing={horizontalSizing}
+        verticalSizing={verticalSizing}
+        wispDensity={wispDensity}
+        wispSpeed={wispSpeed}
+        wispIntensity={wispIntensity}
+        flowSpeed={flowSpeed}
+        flowStrength={flowStrength}
+        fogIntensity={fogIntensity}
+        fogScale={fogScale}
+        fogFallSpeed={fogFallSpeed}
+        decay={decay}
+        falloffStart={falloffStart}
+        color={laserColor}
+        key={key}
+        className={`laser-flow-demo-${selectedExample}`}
+      />
+    </Box>
   );
 };
 
